@@ -1,0 +1,281 @@
+{
+  "type": "json_schema",
+  "json_schema": {
+    "name": "extract_redactions",
+    "strict": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "item": {
+          "anyOf": [
+            {
+              "type": "object",
+              "description": "An email or email chain, with one entry for each email in each enum",
+              "properties": {
+                "document_type": {
+                  "type": "string",
+                  "const": "Email chain"
+                },
+                "title": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/title"
+                  }
+                },
+                "date": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/date"
+                  }
+                },
+                "individuals": {
+                  "$ref": "#/$defs/individuals"
+                },
+                "organizations": {
+                  "$ref": "#/$defs/organizations"
+                },
+                "issues": {
+                  "$ref": "#/$defs/issues"
+                },
+                "transcript": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/page"
+                  }
+                },
+                "multiple_columns": {
+                  "$ref": "#/$defs/multiple_columns"
+                },
+                "redaction_terms": {
+                  "$ref": "#/$defs/redaction_terms"
+                },
+                "redaction_characters_like_\u2588": {
+                  "$ref": "#/$defs/redaction_characters_like_\u2588"
+                },
+                "redaction_count": {
+                  "$ref": "#/$defs/redaction_count"
+                },
+                "redaction_percentage": {
+                  "$ref": "#/$defs/redaction_percentage"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "document_type",
+                "title",
+                "date",
+                "individuals",
+                "organizations",
+                "issues",
+                "transcript",
+                "multiple_columns",
+                "redaction_terms",
+                "redaction_characters_like_\u2588",
+                "redaction_count",
+                "redaction_percentage"
+              ]
+            },
+            {
+              "type": "object",
+              "description": "A report or other form of document",
+              "properties": {
+                "document_type": {
+                  "type": "string",
+                  "const": "Other"
+                },
+                "title": {
+                  "$ref": "#/$defs/title"
+                },
+                "date": {
+                  "$ref": "#/$defs/date"
+                },
+                "individuals": {
+                  "$ref": "#/$defs/individuals"
+                },
+                "organizations": {
+                  "$ref": "#/$defs/organizations"
+                },
+                "issues": {
+                  "$ref": "#/$defs/issues"
+                },
+                "transcript": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/page"
+                  }
+                },
+                "multiple_columns": {
+                  "$ref": "#/$defs/multiple_columns"
+                },
+                "redaction_terms": {
+                  "$ref": "#/$defs/redaction_terms"
+                },
+                "redaction_characters_like_\u2588": {
+                  "$ref": "#/$defs/redaction_characters_like_\u2588"
+                },
+                "redaction_count": {
+                  "$ref": "#/$defs/redaction_count"
+                },
+                "redaction_percentage": {
+                  "$ref": "#/$defs/redaction_percentage"
+                }
+              },
+              "additionalProperties": false,
+              "required": [
+                "document_type",
+                "title",
+                "date",
+                "individuals",
+                "organizations",
+                "issues",
+                "transcript",
+                "multiple_columns",
+                "redaction_terms",
+                "redaction_characters_like_\u2588",
+                "redaction_count",
+                "redaction_percentage"
+              ]
+            }
+          ]
+        }
+      },
+      "$defs": {
+        "date": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Date of the document or email."
+        },
+        "title": {
+          "type": "string",
+          "description": "The title of the email, report, or other document"
+        },
+        "individuals": {
+          "type": "array",
+          "description": "Individuals mentioned",
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "organizations": {
+          "type": "array",
+          "description": "Organizations mentioned",
+          "items": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "issues": {
+          "type": "array",
+          "description": "Issues relevant to climate action (or delay thereof) touched on",
+          "items": {
+            "type": "string",
+            "enum": [
+              "null",
+              "Natural Gas",
+              "Carbon Capture and Storage",
+              "Hydrogen"
+            ]
+          }
+        },
+        "redaction_count": {
+          "type": "integer",
+          "description": "Count of redactions."
+        },
+        "redaction_percentage": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Percentage of the document is redacted, as the estimated number of redacted characters divided by the total number of characters in the document"
+        },
+        "redaction_characters_like_\u2588": {
+          "type": "array",
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "const": "\u2588"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Character, particularly \u2588, used to denote redactions in the transcript"
+        },
+        "redaction_terms": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Redacted",
+                  "Redaction",
+                  "Confidential",
+                  "Privileged",
+                  "First Amendment"
+                ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Terms used in the document or emails to describe redacted contents, such as 'Redacted,' 'Redaction, 'Confidential,' 'Privileged,' or 'First Amendment.'"
+        },
+        "page": {
+          "type": "object",
+          "properties": {
+            "header": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "footer": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "leftColumn": {
+              "type": "string"
+            },
+            "rightColumn": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "header",
+            "footer",
+            "leftColumn",
+            "rightColumn"
+          ]
+        },
+        "multiple_columns": {
+          "type": "boolean",
+          "description": "Does any page contain more than one text column?"
+        }
+      },
+      "required": [
+        "item"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
