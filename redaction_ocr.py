@@ -45,37 +45,6 @@ def transcribe_page(client, image, seed_):
     schema = json.load(schema_file)
   transcribe_role = read_util('transcribe_role.txt')
   role = {"role": "system", "content": transcribe_role}
-  # example_path = os.path.join(os.path.dirname(__file__), 'util', 'box.jpg')
-  # example_image = encode_image(example_path)
-  # example_prompt = {
-  #     "role": "user",
-  #     "content": [
-  #         {
-  #             "type": "text",
-  #             "text": "Practice by transcribing this page as you see it."
-  #         },
-  #         {
-  #             "type": "image_url",
-  #             "image_url": {
-  #                 "url": f"data:image/jpeg;base64,{example_image}"
-  #             }
-  #         }
-  #     ]
-  # }
-  # example_transcript = read_util('box_transcript.txt')
-  # example_transcript_json = {
-  #     "role": "system",
-  #     "content": example_transcript
-  # }
-  # example_redaction_prompt = {
-  #     "role": "user",
-  #     "content": "Now transcribe the document with the redactions."
-  # }
-  # example_redaction = read_util('box_redaction.txt')
-  # example_redaction_json = {
-  #     "role": "system",
-  #     "content": example_redaction
-  # }
   stylized_box = read_util('stylized_box.txt')
   stylized_box_json = {
       "role": "user",
@@ -104,10 +73,6 @@ def transcribe_page(client, image, seed_):
   }
   messages_ = [
       role,
-      # example_prompt,
-      # example_transcript_json,
-      # example_redaction_prompt,
-      # example_redaction_json,
       stylized_box_json,
       stylized_box_transcription_json,
       image_json
@@ -297,26 +262,6 @@ def transcribe_and_decode(client_, pages, seed_, max_attempts=10, max_workers=16
 
   return(contents)
 
-  # for i, page in enumerate(pages, 1):
-  #   print(f"Transcribing page {i} of {len(pages)}.")
-  #   attempts = 0
-  #   success = False
-  #   while attempts < max_attempts and not success:
-  #     try:
-  #       transcript = transcribe_page(client_, page, seed_)
-  #       if transcript is None:
-  #         break # Skip if we run into exceptionally rare ContentFilterFinishReasonError
-  #       content = json.loads(transcript.choices[0].message.content)
-  #       contents.append(content)
-  #       # print(f"Successfully transcribed page {i} of {len(pages)}.")
-  #       success = True
-  #     except (json.JSONDecodeError):
-  #       attempts += 1
-  #       print(f"Failed attempt to transcribe page {i} of {len(pages)}.")
-  #   if not success:
-  #     raise RuntimeError(f"Failed to transcribe page {i} after {max_attempts} attempts.")
-  # return contents
-
 
 def view_doc(client, pdf, seed):
   """Handles conversion and all API calls, returns all information."""
@@ -331,111 +276,3 @@ def view_doc(client, pdf, seed):
   info_by_page = get_info_by_page(contents)
   info_overall = get_info_overall(info_parsed, contents)
   return [assembled_transcript, info_by_page, info_overall]
-
-
-# def view_doc(client, file, seed_, page_by_page=True):
-#   schema_path = os.path.join(os.path.dirname(
-#       __file__), 'util', 'docs_schema.json')
-#   with open(schema_path, 'r') as schema_file:
-#     schema = json.load(schema_file)
-
-#   concise_role = read_util('role_concise.txt')
-#   task_first = read_util('task_first.txt')
-#   announce = read_util('announce.txt')
-#   example_1 = read_util('example_1.txt')
-#   solution_1 = read_util('solution_1.txt')
-#   example_2 = read_util('example_2.txt')
-#   solution_2 = read_util('solution_2.txt')
-
-#   role = {"role": "system", "content": concise_role}
-#   task = {"role": "user", "content": task_first}
-#   pre_task_1 = {
-#       "role": "user",
-#       "content": [
-#           {"type": "text",
-#            "text": example_1
-#            }
-#       ]
-#   }
-#   task_1 = {
-#       "role": "assistant",
-#       "content": [
-#           {"type": "text",
-#            "text": solution_1
-#            }
-#       ]
-#   }
-#   pre_task_2 = {
-#       "role": "user",
-#       "content": [
-#           {"type": "text",
-#            "text": example_2
-#            }
-#       ]
-#   }
-#   task_2 = {
-#       "role": "assistant",
-#       "content": [
-#           {"type": "text",
-#            "text": solution_2
-#            }
-#       ]
-#   }
-#   announce_docs = {
-#       "role": "user",
-#       "content": [
-#           {
-#               "type": "text",
-#               "text": announce}
-#       ]
-#   }
-
-#   os.system(f"cp {file} temp/tmp.pdf")
-#   os.system(f"pdftoppm -jpeg temp/tmp.pdf temp/tmp")
-#   pages = sorted(glob.glob("temp/tmp-*"))
-
-#   if not page_by_page:
-#     for page in pages:
-#       image = encode_image(page)
-#       image_json = {
-#           "type": "image_url",
-#           "image_url": {
-#               "url": f"data:image/jpeg;base64,{image}"
-#           }
-#       }
-#       announce_docs['content'].append(image_json)
-#     messages_ = [role, pre_task_1, task_1, announce_docs]
-#     # messages_ = [role, pre_task_1, task_1, pre_task_2, task_2, announce_docs]
-#     # This failed
-#     response = client.beta.chat.completions.parse(
-#         model="gpt-4o-2024-08-06",
-#         messages=messages_,
-#         seed=seed_,
-#         response_format=schema
-#     )
-#     os.system("rm temp/tmp*")
-#     return response
-
-#   responses = []
-
-#   for page in pages:
-#     image = encode_image(page)
-#     image_json = {
-#         "type": "image_url",
-#         "image_url": {
-#             "url": f"data:image/jpeg;base64,{image}"
-#         }
-#     }
-#     actual_call = announce_docs
-#     actual_call['content'].append(image_json)
-#     messages_ = [role, pre_task_1, task_1, announce_docs]
-#     response = client.beta.chat.completions.parse(
-#         model="gpt-4o-2024-08-06",
-#         messages=messages_,
-#         seed=seed_,
-#         response_format=schema
-#     )
-#     result = json.loads(response.choices[0].message.content)['item']
-#     responses.append(result)
-#   os.system("rm temp/tmp*")
-#   return responses
