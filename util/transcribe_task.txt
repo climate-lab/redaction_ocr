@@ -1,0 +1,3 @@
+Now I will send you the document page that you should transcribe. Again, you have two priorities. (1) Transcribe every single redaction accurately with █ characters. In particular, identify terms that mark redactions, such as 'Redacted,' 'Redaction, 'Confidential,' 'Privileged,' or 'First Amendment,' and surround them with an appropriate number of █ characters to indicate the scope of the redaction (approx. how much text). (2) Transcribe every word of every page and every column! Remember that not all documents contain redactions. If a paragraph is partially redacted, transcribe every character you can make out.
+
+

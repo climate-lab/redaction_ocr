@@ -1,0 +1,18 @@
+This is another stylized example for you to practice and insert █ characters to mark redactions:
+DOCUMENT ID 2024-9471
+
+Hi Mr. John Doe
+
+Please see the attached letter.
+
+DOCUMENT ID 2024-9471
+
+Confidential -- do not circulate.                  GBG-9410
+
+DOCUMENT ID 2024-9471
+
+-----------------------------------------------------------------------
+|                   Privileged – First Amendment                      |
+-----------------------------------------------------------------------
+
+Confidential -- do not circulate.                  GBG-9410

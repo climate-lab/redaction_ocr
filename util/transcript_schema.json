@@ -1,0 +1,109 @@
+{
+  "type": "json_schema",
+  "json_schema": {
+    "name": "transcript",
+    "strict": true,
+    "schema": {
+      "type": "object",
+      "properties": {
+        "two_columns": {
+          "$ref": "#/$defs/two_columns"
+        },
+        "final_transcript": {
+          "$ref": "#/$defs/transcript"
+        },
+        "redaction_terms": {
+          "$ref": "#/$defs/redaction_terms"
+        },
+        "redaction_count": {
+          "$ref": "#/$defs/redaction_count"
+        },
+        "redaction_percentage": {
+          "$ref": "#/$defs/redaction_percentage"
+        }
+      },
+      "required": [
+        "two_columns",
+        "final_transcript",
+        "redaction_terms",
+        "redaction_count", 
+        "redaction_percentage"
+      ],
+      "$defs": {
+        "transcript": {
+          "type": "object",
+          "properties": {
+            "header": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "footer": {
+              "type": [
+                "string",
+                "null"
+              ]
+            },
+            "leftColumn": {
+              "type": "string"
+            },
+            "rightColumn": {
+              "type": [
+                "string",
+                "null"
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "header",
+            "footer",
+            "leftColumn",
+            "rightColumn"
+          ]
+        },
+        "redaction_count": {
+          "type": "integer",
+          "description": "Count of redactions."
+        },
+        "redaction_percentage": {
+          "type": [
+            "integer"
+          ],
+          "description": "Percentage of the document is redacted, as the estimated number of redacted characters divided by the total number of characters in the document"
+        },
+        "redaction_terms": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Redacted",
+                  "Redaction",
+                  "Confidential",
+                  "Privileged",
+                  "Withheld",
+                  "First Amendment"
+                ]
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "description": "Terms used in the document or emails to describe redacted contents, such as 'Redacted,' 'Redaction, 'Confidential,' 'Privileged,' 'Withheld,' or 'First Amendment.'"
+        },
+        "two_columns": {
+          "type": "boolean",
+          "description": "Does any page contain more than one text column?"
+        }
+      },
+      "additionalProperties": false
+    }
+  }  
+}
