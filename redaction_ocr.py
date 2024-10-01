@@ -174,7 +174,7 @@ def get_info_overall(info_, contents):
     if datapoints is None:
       return_value = ""
     else: 
-      datapoints_sanitized = [datapoint.replace(";", ",") for datapoint in datapoints]
+      datapoints_sanitized = [datapoint.replace(";", ",") if datapoint is not None else "" for datapoint in datapoints]
       return_value = ";".join(datapoints_sanitized)
     return return_value
   document_type = info_['document_type']
@@ -236,29 +236,32 @@ def transcribe_and_decode(client_, pages, seed_, max_attempts=10, max_workers=16
             return None  # Skip if we run into exceptionally rare ContentFilterFinishReasonError
         content = json.loads(transcript.choices[0].message.content)
         success = True
-        return content
+        return page_num, content
       except (json.JSONDecodeError):
         attempts += 1
         print(f"{attempts} failed attempt(s) to transcribe page {page_num} of {total_pages}.")
     if not success:
       raise RuntimeError(f"Failed to transcribe page after {max_attempts} attempts.")
   
-  contents = []
+  results = []
+  # contents = []
   total_pages = len(pages)
 
   with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
     # Submit tasks for transcription in parallel
-    future_to_page = {executor.submit(transcribe_page_with_retries, page, i, total_pages, client_, seed_, max_attempts): page for i, page in enumerate(pages, 1)}
+    future_to_page = {executor.submit(transcribe_page_with_retries, page, i, total_pages, client_, seed_, max_attempts): i for i, page in enumerate(pages, 1)}
 
     # Collect results as they complete
     for future in concurrent.futures.as_completed(future_to_page):
       page = future_to_page[future]
       try:
-        result = future.result()
+        page_num, result = future.result()
         if result is not None:
-          contents.append(result)
+          results.append((page_num, result))
       except Exception as exc:
         print(f"Page transcription generated an exception: {exc}")
+  results.sort(key=lambda x: x[0])
+  contents = [content for _, content in results]
 
   return(contents)
 
